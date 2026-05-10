@@ -1,0 +1,56 @@
+spring:
+  application:
+    name: order-process-system-demo
+  datasource:
+    url: jdbc:h2:mem:orders;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;CASE_INSENSITIVE_IDENTIFIERS=TRUE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate.jdbc.time_zone: UTC
+  flyway:
+    enabled: true
+    # Two locations: schema migrations + seed data. Tests override this to
+    # exclude seeds (see application-test.yml) so they start from an empty DB.
+    locations: classpath:db/migration,classpath:db/seed
+  h2:
+    console:
+      enabled: false
+
+server:
+  port: 8080
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+app:
+  security:
+    jwt:
+      secret: ${JWT_SECRET:default-secret}
+      expiration-seconds: 3600
+
+notifications:
+  url: http://localhost:9561/
+  channels:
+    email:
+      enabled: true
+    sms:
+      enabled: true
+
+logging:
+  pattern:
+    level: "%5p [traceId=%X{traceId:-}]"
+
+spring.config.import: optional:classpath:secret.yml
+

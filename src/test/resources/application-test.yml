@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:test-${random.uuid};MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;CASE_INSENSITIVE_IDENTIFIERS=TRUE
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  flyway:
+    # Tests start from an empty DB — schema only, no seed data.
+    locations: classpath:db/migration
+
+app:
+  security:
+    jwt:
+      secret: test-secret-test-secret-test-secret-test-secret!
+      expiration-seconds: 600
+
+notifications:
+  url: http://localhost:${wiremock.port:0}/
+  channels:
+    email:
+      enabled: true
+    sms:
+      enabled: true

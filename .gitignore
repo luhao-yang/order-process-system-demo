@@ -22,3 +22,21 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 replay_pid*
+
+# Build / IDE
+.gradle/
+build/
+out/
+.idea/
+*.iml
+.vscode/
+.DS_Store
+
+# Don't ignore the wrapper jar
+!gradle/wrapper/gradle-wrapper.jar
+
+# Local secrets — never commit
+src/main/resources/secret.yml
+secret.yml
+
+.claude/

@@ -1,0 +1,91 @@
+### Login as admin -> stores accessToken into client global "adminToken"
+POST {{host}}/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "username": "{{adminUser}}",
+  "password": "{{adminPass}}"
+}
+
+> {%
+    client.global.set("adminToken", response.body.accessToken);
+%}
+
+### Login as plain user -> stores accessToken into "userToken"
+POST {{host}}/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "username": "{{user}}",
+  "password": "{{userPass}}"
+}
+
+> {%
+    client.global.set("userToken", response.body.accessToken);
+%}
+
+### Create an order (ADMIN) -> stores order id into "orderId"
+POST {{host}}/api/v1/orders
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "customerId": "c-1",
+  "items": [
+    { "productId": "p-1", "quantity": 2, "unitPrice": 9.99 },
+    { "productId": "p-2", "quantity": 1, "unitPrice": 4.50 }
+  ]
+}
+
+> {%
+    client.global.set("orderId", response.body.order.id);
+%}
+
+### Get an order by id
+GET {{host}}/api/v1/orders/{{orderId}}
+Authorization: Bearer {{adminToken}}
+
+### Search orders (no filters, paged)
+GET {{host}}/api/v1/orders?page=0&size=20
+Authorization: Bearer {{adminToken}}
+
+### Search orders by status
+GET {{host}}/api/v1/orders?status=CREATED&page=0&size=20
+Authorization: Bearer {{adminToken}}
+
+### Search orders by customer + date range
+GET {{host}}/api/v1/orders?customerId=c-1&createdFrom=2025-01-01T00:00:00Z&createdTo=2030-01-01T00:00:00Z
+Authorization: Bearer {{adminToken}}
+
+### Patch order status -> COMPLETED (ADMIN required)
+PATCH {{host}}/api/v1/orders/{{orderId}}/status
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "status": "COMPLETED"
+}
+
+### Patch order status -> CANCELLED
+PATCH {{host}}/api/v1/orders/{{orderId}}/status
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "status": "CANCELLED"
+}
+
+### Patch as USER -> expect 403 Forbidden
+PATCH {{host}}/api/v1/orders/{{orderId}}/status
+Authorization: Bearer {{userToken}}
+Content-Type: application/json
+
+{
+  "status": "COMPLETED"
+}
+
+### Unauthenticated request -> expect 401
+GET {{host}}/api/v1/orders
+
+### Actuator health (permitAll)
+GET {{host}}/actuator/health

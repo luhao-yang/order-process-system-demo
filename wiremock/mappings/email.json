@@ -1,0 +1,9 @@
+{
+  "request": {
+    "method": "POST",
+    "urlPath": "/email"
+  },
+  "response": {
+    "status": 201
+  }
+}
