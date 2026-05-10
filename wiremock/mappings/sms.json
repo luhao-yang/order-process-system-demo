@@ -1,7 +1,7 @@
 {
   "request": {
     "method": "POST",
-    "urlPath": "/sms"
+    "urlPath": "/api/v1/sms"
   },
   "response": {
     "status": 201

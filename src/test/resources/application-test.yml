@@ -15,7 +15,7 @@ app:
       expiration-seconds: 600
 
 notifications:
-  url: http://localhost:${wiremock.port:0}/
+  url: http://localhost:${wiremock.port:0}/api/v1/
   channels:
     email:
       enabled: true

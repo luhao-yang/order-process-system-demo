@@ -88,8 +88,8 @@ class OrderIntegrationTest {
 
     @Test
     void partialNotificationFailureReturns207() throws Exception {
-        wireMock.stubFor(com.github.tomakehurst.wiremock.client.WireMock.post(urlPathEqualTo("/email")).willReturn(ok()));
-        wireMock.stubFor(com.github.tomakehurst.wiremock.client.WireMock.post(urlPathEqualTo("/sms")).willReturn(serverError()));
+        wireMock.stubFor(com.github.tomakehurst.wiremock.client.WireMock.post(urlPathEqualTo("/api/v1/email")).willReturn(ok()));
+        wireMock.stubFor(com.github.tomakehurst.wiremock.client.WireMock.post(urlPathEqualTo("/api/v1/sms")).willReturn(serverError()));
 
         String token = login("admin", "admin-pass");
         String body = """
@@ -114,7 +114,7 @@ class OrderIntegrationTest {
         }
         assertThat(smsFailed).isTrue();
         // 3 retry attempts on /sms
-        wireMock.verify(3, postRequestedFor(urlPathEqualTo("/sms")));
+        wireMock.verify(3, postRequestedFor(urlPathEqualTo("/api/v1/sms")));
     }
 
     @Test
@@ -174,8 +174,8 @@ class OrderIntegrationTest {
     }
 
     private void stubAllChannelsOk() {
-        wireMock.stubFor(com.github.tomakehurst.wiremock.client.WireMock.post(urlPathEqualTo("/email")).willReturn(ok()));
-        wireMock.stubFor(com.github.tomakehurst.wiremock.client.WireMock.post(urlPathEqualTo("/sms")).willReturn(ok()));
+        wireMock.stubFor(com.github.tomakehurst.wiremock.client.WireMock.post(urlPathEqualTo("/api/v1/email")).willReturn(ok()));
+        wireMock.stubFor(com.github.tomakehurst.wiremock.client.WireMock.post(urlPathEqualTo("/api/v1/sms")).willReturn(ok()));
     }
 
     private String login(String user, String pass) throws Exception {

@@ -41,7 +41,7 @@ app:
       expiration-seconds: 3600
 
 notifications:
-  url: http://localhost:9561/
+  url: http://localhost:9561/api/v1/
   channels:
     email:
       enabled: true
